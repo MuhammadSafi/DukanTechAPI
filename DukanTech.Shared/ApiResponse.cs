@@ -31,6 +31,17 @@ namespace DukanTech.Shared
 			}
 		}
 
+		public ApiResponse(int? total = null, bool success = true)
+		{
+			
+			Total = total;
+
+			if (success)
+			{
+				ResponseStatusCode = StatusCode.Success;
+			}
+		}
+
 		public ApiResponse(StatusCode errorCode) : base(errorCode)
 		{
 		}

@@ -1,26 +1,39 @@
 ﻿using DukanTech.Shared.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DukanTech.Repository.DbContexts
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : IProductRepository, IDisposable
     {
-        public Task<bool> ExistsAsync(Guid id)
+        private readonly ProductContext _context;
+        public ProductRepository(ProductContext context)
         {
-            throw new NotImplementedException();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task Product(int productStatus)
+        //public async Task<bool> ExistsAsync(Guid id)
+        //{
+        //    await _context.Products.AnyAsync(e => e.Id == id);
+        //}
+
+        public async Task<bool> ExistsAsync(Guid id) => await _context.Products.AnyAsync(e => e.Id == id);
+
+        public async Task<int> Product(int productStatus)
         {
-            throw new NotImplementedException();
+            var total = await _context.Products.Select(a=>a.Status == productStatus).CountAsync();
+            return total;
         }
 
-        public Task  SellProduct(Guid productId)
+        public async Task SellProduct(Guid productId)
         {
-            throw new NotImplementedException();
+            var result = await _context.Products.SingleOrDefaultAsync(a => a.Id == productId);
+            result.Status = (int)ProductStatus.Sold;
+            await _context.SaveChangesAsync();
         }
 
         public void UpdateProductStatus(Guid productId)
@@ -28,9 +41,25 @@ namespace DukanTech.Repository.DbContexts
             throw new NotImplementedException();
         }
 
-        Task IProductRepository.UpdateProductStatus(Guid productId)
+        public async Task UpdateProductStatus(Guid productId, int status)
         {
-            throw new NotImplementedException();
+            var result = await _context.Products.SingleOrDefaultAsync(a => a.Id == productId);
+            result.Status = status;
+            await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose resources when needed
+            }
         }
     }
 }

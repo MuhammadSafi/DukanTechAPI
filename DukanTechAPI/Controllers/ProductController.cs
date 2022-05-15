@@ -1,4 +1,5 @@
 ﻿using DukanTech.Services;
+using DukanTech.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace DukanTechAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/product")]
     public class ProductController : DukanTechControllerBase
     {
         private readonly IProductService _productservice;
@@ -20,15 +21,17 @@ namespace DukanTechAPI.Controllers
                 throw new ArgumentNullException(nameof(productservice));
         }
 
-        [HttpPatch("{productId}")]
-        public async Task<IActionResult> SellProduct(Guid productId, int status)
-        {
-            var response = await  _productservice.SellProductAsync(productId, status);
+        [HttpPut]
+        [Route("SellProduct/{productId}")]
+        public async Task<IActionResult> SellProduct(Guid productId)
+       {
+           var response = await  _productservice.SellProductAsync(productId);
 
-            return GetActionResult(response);
-        }
+           return GetActionResult(response);
+       }
 
-        [HttpPatch("{productId}")]
+        [HttpPatch]
+        [Route("UpdateProduct/{productId}/{status}")]
         public async Task<IActionResult> UpdateProduct(Guid productId, int status)
         {
             var response = await _productservice.UpdateProductStatus(productId, status);
@@ -36,10 +39,11 @@ namespace DukanTechAPI.Controllers
             return GetActionResult(response);
         }
 
-        [HttpGet("{status}")]
-        public async Task<IActionResult> UpdateProduct(int status)
+        [HttpGet]
+        [ProducesResponseType(typeof(SuccessResponse), 400)]
+        public async Task<IActionResult> Get(int status)
         {
-            var response = await _productservice.Product(status);
+            var response = await _productservice.GetProductAsyn(status);
 
             return GetActionResult(response);
         }

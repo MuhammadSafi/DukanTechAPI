@@ -9,9 +9,9 @@ namespace DukanTech.Services
 {
     public interface IProductService
     {
-        Task<AbstractResponse> Product(int productStatus);
-        Task<AbstractResponse> SellProductAsync(Guid productId, int productStatus);
+        Task<ApiResponse<int>> GetProductAsyn(int productStatus);
+        Task<AbstractResponse> SellProductAsync(Guid productId);
         Task<AbstractResponse> UpdateProductStatus(Guid productId, int productStatus);
-        //public bool GetProductById(Guid productId);
+        
     }
 }

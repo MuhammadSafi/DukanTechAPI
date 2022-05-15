@@ -17,26 +17,20 @@ namespace DukanTech.Services
            _productRepository = productRepository;
         }
 
-        //public bool GetProductById(Guid productId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public async Task<AbstractResponse> Product(int productStatus)
+        public async Task<ApiResponse<int>> GetProductAsyn(int productStatus)
         {
             try
             {
-              
-                await _productRepository.Product(productStatus);
-                return new PassedResponse(StatusCode.Success);
+                var total = await _productRepository.Product(productStatus);
+                return new ApiResponse<int>(total);
             }
             catch (Exception ex)
             {
-                return new ErrorResponse(StatusCode.UnhandledException, ex);
+                return new ApiResponse<int>(StatusCode.UnhandledException, ex);
             }
         }
 
-        public async Task<AbstractResponse> SellProductAsync(Guid productId, int productStatus)
+        public async Task<AbstractResponse> SellProductAsync(Guid productId)
         {
             try
             {
@@ -62,7 +56,7 @@ namespace DukanTech.Services
                     return new ErrorResponse(StatusCode.ProductNotFound);
                 }
 
-                await _productRepository.UpdateProductStatus(productId);
+                await _productRepository.UpdateProductStatus(productId, productStatus);
                 return new PassedResponse(StatusCode.Updated);
             }
             catch (Exception ex)

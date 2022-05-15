@@ -8,8 +8,8 @@ namespace DukanTech.Repository.DbContexts
 {
     public interface IProductRepository
     {
-        Task Product(int productStatus);
-        Task UpdateProductStatus(Guid productId);
+        Task<int> Product(int productStatus);
+        Task UpdateProductStatus(Guid productId, int status);
         Task SellProduct(Guid productId);
         Task<bool> ExistsAsync(Guid id);
     }

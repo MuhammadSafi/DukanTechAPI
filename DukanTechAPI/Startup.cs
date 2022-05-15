@@ -36,14 +36,14 @@ namespace DukanTechAPI
 
             services.AddScoped<IProductService, ProductService>();
 
-            services.AddDbContext<InventoryContext>(options =>
+            services.AddDbContext<ProductContext>(options =>
             {
                 options.UseSqlServer(
-                    @"Server=.;Database=ProductDB;Trusted_Connection=True;");
+                    @"Data Source=.;Initial Catalog=DukkanTechProductsDB;Integrated Security=True;");
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Data Flow API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DukkanTech API", Version = "v1" });
                 //var basePath = AppDomain.CurrentDomain.BaseDirectory;
             });
             services.AddControllers();
@@ -67,6 +67,9 @@ namespace DukanTechAPI
             {
                 endpoints.MapControllers();
             });
+            
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
     }
 }
