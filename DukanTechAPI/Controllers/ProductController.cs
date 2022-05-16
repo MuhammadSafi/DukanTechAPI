@@ -40,6 +40,7 @@ namespace DukanTechAPI.Controllers
         }
 
         [HttpGet]
+        [Route("{status}/count")]
         [ProducesResponseType(typeof(SuccessResponse), 400)]
         public async Task<IActionResult> Get(int status)
         {

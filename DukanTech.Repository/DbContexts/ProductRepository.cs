@@ -15,17 +15,12 @@ namespace DukanTech.Repository.DbContexts
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-
-        //public async Task<bool> ExistsAsync(Guid id)
-        //{
-        //    await _context.Products.AnyAsync(e => e.Id == id);
-        //}
-
+        
         public async Task<bool> ExistsAsync(Guid id) => await _context.Products.AnyAsync(e => e.Id == id);
 
         public async Task<int> Product(int productStatus)
         {
-            var total = await _context.Products.Select(a=>a.Status == productStatus).CountAsync();
+            var total = await _context.Products.Where(a=>a.Status == productStatus).CountAsync();
             return total;
         }
 
